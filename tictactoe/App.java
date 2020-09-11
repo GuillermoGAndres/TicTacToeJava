@@ -1,29 +1,50 @@
-package tictactoe;
+package tictacoe;
 import java.util.Scanner;
 import java.util.Arrays;
 
 public class App {
-    private Scanner parse = new Scanner(System.in);
+    private static Scanner parse = new Scanner(System.in);
 
-    public static void Main(String[] args) {
-        String word = "Hola mundo";
-        for(char letter : word) {
-            System.out.println(letter);
+    public static void main(String[] args) {
+        App tictactoe = new App();
+        char[] symbols = tictactoe.readInputUser();
+        tictactoe.draw(symbols);
+
+    }
+    
+
+    /**
+     * Dibuja el table de los jugadores
+     *     X O X 
+     *     O X O
+     *     X O X
+     */
+    public void draw(char[] symbols) {
+        System.out.println("---------");
+        int count = 0;
+        for(int i = 0; i < 3; i++) {
+            System.out.print("| ");
+            for(int j = 0; j < 3; j++) {
+                System.out.print(symbols[count] + " ");
+                count++;
+            }
+            System.out.print("|");
+            System.out.println();
         }
-        //draw();
+        System.out.println("---------");
     }
 
-    private void draw() {
-        System.out.println("X O X");
-        System.out.println("O X O");
-        System.out.println("X O X");
-    }
 
+    /**
+     * Va leer la entrada y la va descomponer 
+     * en un arreglo de caracteres
+     */
     public char[] readInputUser() {
-        int n = 9; // Nine symbols
-        char[] symbols = new char[n];
-        for(int i=0; i < n; i++) {
+        String word = parse.next();
+        char[] patron = new char[word.length()];
+        for(int i = 0; i < word.length(); i++) {
+            patron[i] = word.charAt(i);
         }
-        return symbols;
+        return patron;
     }
 }
