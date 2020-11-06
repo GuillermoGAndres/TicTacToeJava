@@ -1,0 +1,4 @@
+# Swap files
+*.*~
+# class files
+*.class

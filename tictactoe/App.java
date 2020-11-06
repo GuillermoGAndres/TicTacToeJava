@@ -7,69 +7,40 @@ public class App {
     private static Scanner parse = new Scanner(System.in);
 
     public static void main(String[] args) {
-         App tictactoe = new App();
-         char[] game = tictactoe.readInputUser();
-         char[][] board  = tictactoe.makeBoard(game);
-	 draw(board);
-	 //int x=-1, y=-1;
-	 int x=-1, y=-1; // Utilo integer porque los pasare por referencia al validar los datos
-	 boolean flag = true;
-	 // Tranform coordante Modicar board by every movement.
-	 //(x,y) -> (3,2)
-	 //Validar datos (exeptions) _XXOO_OX_ _XXOO_OX_
-	 do {
-	     // do {
-		 
-	     // 	 System.out.print("Enter the coordinate: ");
-	     // 	 try{
-	     // 	     x = parse.nextInt();
-	     // 	     y = parse.nextInt();
-	     // 	     flag = false;
-	     // 	 }catch(InputMismatchException e) {
-	     // 	     System.out.println("You should enter numbers!");
-	     // 	     // Limpiar las cadenas  que se quedo guardada en la entrada.
-	     // 	     parse.nextLine();
-	     // 	     flag = true;
-	     // 	 }
-	     // 	 if(!flag) { // Significa que ya paso las pruebes de ser nuermso enteros
-	     // 	     if((x >= 1 && x <=3) && (y >= 1 && y <= 3))
-	     // 		 flag = false;
-	     // 	     else{
-	     // 		 flag = true;
-	     // 		 System.out.println("Coordinates should be from 1 to 3!");
-	     // 	     }
-	     // 	 }
-		 
-	     // }while(flag);
-	     
-	     int[] coordinates = readCoordinates(x,y); // Read and valite coordinates
-	     x = coordinates[0]; // Representa el valor de x
-	     y = coordinates[1];
-
-	     // Escoger celda
-	     int newx = 0, newy=x-1;
-	     switch(y){
-	     case 3:
-		 newx = 0;
-		 break;
-	     case 2:
-		 newx = 1;
-		 break;
-	     case 1:
-		 newx = 2;
-	     }
-	     if (board[newx][newy] == ' ') {
-		 board[newx][newy] = 'X';
-		 flag = false;
-	     }else
-		 System.out.println("This cell is occupied! Choose another one!");
-	     
-	 } while(flag); 
-	 
-	 draw(board);
+	App tictactoe = new App();
+	char[] game = tictactoe.readInputUser();
+	char[][] board  = tictactoe.makeBoard(game);
+	draw(board);
+	board = moveUser(board); // Judada del usuario
+	draw(board);
 
     }
+    
 
+    /*
+     * Jugadas del user y verifica que si la casilla esta permitida.
+     * @return board - Devuelve un nuevo table con la jugada del usuario.
+     */
+    public static char[][] moveUser(char[][] board) {
+	int x = -1, y = -1; 
+	boolean flag = true;
+	// Jugada del usuario
+	do {
+	    //Validar datos (exeptions)
+	    int[] coordinates = readCoordinates(x,y); // Read and valite coordinates
+	    x = coordinates[0]; // Representa el valor de x
+	    y = coordinates[1]; // Representa el valor de y
+	    // Tranform coordinate and modicar board by every movement.
+	    int newx = 3 - y, newy= x - 1;
+	    if (board[newx][newy] == ' ') {
+		board[newx][newy] = 'X';
+		flag = false;
+	    }else
+		System.out.println("This cell is occupied! Choose another one!");
+	} while(flag);
+	return board;
+	
+    }
     /* 
      *Lees los datos y los valida para que no sea una cadena y que esten en el rango
      * Pasare valores por referencia porque quiero que se guarden esos valores
@@ -122,6 +93,9 @@ public class App {
 	System.out.println("---------");
     }
 
+    /**
+     * Verifica un rango [1,3]
+     */
     public static boolean isRange(int num){
         if(num >=1 || num <= 3) {
             return true;
@@ -139,14 +113,6 @@ public class App {
         }
     }
 
-
-    /**
-     * Valida si las coordenadas son numeros y
-     * pertenecen al rango [1,3]
-     */
-    public void validCoordinate(int coordenate){
-
-    }
 
     /**
      *  Crea el board  de los jugadores: XXXOO__O_
