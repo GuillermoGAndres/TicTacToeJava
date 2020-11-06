@@ -7,6 +7,7 @@ public class App {
     private static Scanner parse = new Scanner(System.in);
 
     public static void main(String[] args) {
+	// The first one of you moves as X, and then the other one moves as O.
 	App tictactoe = new App();
 	char[] game = tictactoe.readInputUser();
 	char[][] board  = tictactoe.makeBoard(game);
