@@ -1,40 +1,171 @@
 package tictactoe;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 
 public class App {
     private static Scanner parse = new Scanner(System.in);
 
     public static void main(String[] args) {
-        App tictactoe = new App();
-        char[] game = tictactoe.readInputUser();
-        char[][] table  = tictactoe.draw(game);
-        String state = tictactoe.findStage(table);
-        System.out.println(state);
+         App tictactoe = new App();
+         char[] game = tictactoe.readInputUser();
+         char[][] board  = tictactoe.makeBoard(game);
+	 draw(board);
+	 //int x=-1, y=-1;
+	 int x=-1, y=-1; // Utilo integer porque los pasare por referencia al validar los datos
+	 boolean flag = true;
+	 // Tranform coordante Modicar board by every movement.
+	 //(x,y) -> (3,2)
+	 //Validar datos (exeptions) _XXOO_OX_ _XXOO_OX_
+	 do {
+	     // do {
+		 
+	     // 	 System.out.print("Enter the coordinate: ");
+	     // 	 try{
+	     // 	     x = parse.nextInt();
+	     // 	     y = parse.nextInt();
+	     // 	     flag = false;
+	     // 	 }catch(InputMismatchException e) {
+	     // 	     System.out.println("You should enter numbers!");
+	     // 	     // Limpiar las cadenas  que se quedo guardada en la entrada.
+	     // 	     parse.nextLine();
+	     // 	     flag = true;
+	     // 	 }
+	     // 	 if(!flag) { // Significa que ya paso las pruebes de ser nuermso enteros
+	     // 	     if((x >= 1 && x <=3) && (y >= 1 && y <= 3))
+	     // 		 flag = false;
+	     // 	     else{
+	     // 		 flag = true;
+	     // 		 System.out.println("Coordinates should be from 1 to 3!");
+	     // 	     }
+	     // 	 }
+		 
+	     // }while(flag);
+	     
+	     int[] coordinates = readCoordinates(x,y); // Read and valite coordinates
+	     x = coordinates[0]; // Representa el valor de x
+	     y = coordinates[1];
+
+	     // Escoger celda
+	     int newx = 0, newy=x-1;
+	     switch(y){
+	     case 3:
+		 newx = 0;
+		 break;
+	     case 2:
+		 newx = 1;
+		 break;
+	     case 1:
+		 newx = 2;
+	     }
+	     if (board[newx][newy] == ' ') {
+		 board[newx][newy] = 'X';
+		 flag = false;
+	     }else
+		 System.out.println("This cell is occupied! Choose another one!");
+	     
+	 } while(flag); 
+	 
+	 draw(board);
+
+    }
+
+    /* 
+     *Lees los datos y los valida para que no sea una cadena y que esten en el rango
+     * Pasare valores por referencia porque quiero que se guarden esos valores
+     */
+    public static int[] readCoordinates(Integer x, Integer y){
+	int[] coordinates = new int[2];
+	boolean flag = true;
+	do {
+	    
+	    System.out.print("Enter the coordinate: ");
+	    try{
+		x = parse.nextInt();
+		y = parse.nextInt();
+		flag = false;
+	    }catch(InputMismatchException e) {
+		System.out.println("You should enter numbers!");
+		// Limpiar las cadenas  que se quedo guardada en la entrada.
+		parse.nextLine();
+		flag = true;
+	    }
+	    if(!flag) { // Significa que ya paso las pruebes de ser nuermso enteros
+		if((x >= 1 && x <=3) && (y >= 1 && y <= 3))
+		    flag = false;
+		else{
+		    flag = true;
+		    System.out.println("Coordinates should be from 1 to 3!");
+		}
+	    }
+		 
+	}while(flag);
+	//Sale hasta que se haya ingresado todo correctamente.
+	coordinates[0] = x;
+	coordinates[1] = y;
+	return coordinates;
+    }
+    
+    /**
+     *Dubuja el board de los jugadores
+     */
+    public static void draw(char[][] board) {
+	System.out.println("---------");
+	for (int i=0; i < 3; i++) {
+	     System.out.print("| ");
+	    for( int j=0; j < 3; j++) {
+		  System.out.print(board[i][j] + " ");
+	    }
+	     System.out.print("|");
+            System.out.println();
+	}
+	System.out.println("---------");
+    }
+
+    public static boolean isRange(int num){
+        if(num >=1 || num <= 3) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isNumeric(String num){
+        
+        try{
+            Integer.parseInt(num);
+            return true;
+        }catch(NumberFormatException e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Valida si las coordenadas son numeros y
+     * pertenecen al rango [1,3]
+     */
+    public void validCoordinate(int coordenate){
 
     }
 
     /**
-     * Dibuja el table de los jugadores: XXXOO__O_
+     *  Crea el board  de los jugadores: XXXOO__O_
      *     X O X 
      *     O X O
      *     X O X
      */
-    public char[][] draw(char[] symbols) {
+    public char[][] makeBoard(char[] symbols) {
         char[][] table = new char[3][3];
-        System.out.println("---------");
         int count = 0;
         for(int i = 0; i < 3; i++) {
-            System.out.print("| ");
             for(int j = 0; j < 3; j++) {
-                System.out.print(symbols[count] + " ");
-                table[i][j] = symbols[count];
+		if(symbols[count] == '_') {
+		    symbols[count] = ' ';
+		}
+		table[i][j] = symbols[count];
                 count++;
             }
-            System.out.print("|");
-            System.out.println();
         }
-        System.out.println("---------");
         return table;
     }
 
@@ -57,6 +188,7 @@ public class App {
 
     /**
      * Encontra los escenarios de las posibles jugadas
+     *
      * @return - Regresa el posible estado.
      */
     public String findStage(char[][] table) {
