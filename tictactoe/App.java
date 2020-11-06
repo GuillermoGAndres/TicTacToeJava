@@ -9,12 +9,31 @@ public class App {
     public static void main(String[] args) {
 	// The first one of you moves as X, and then the other one moves as O.
 	App tictactoe = new App();
-	char[] game = tictactoe.readInputUser();
+	
+	//Create q empty field at the beginning of the game
+	String emptyField = "_________";
+	char[] game = emptyField.toCharArray();
 	char[][] board  = tictactoe.makeBoard(game);
 	draw(board);
-	board = moveUser(board); // Judada del usuario
-	draw(board);
-
+	
+	// Creates a game loop where the program asks the user to enter the cell coordinates, analyzes the move for correctness, and shows a field with the changes if everything is ok.
+	String stage;
+	while(true) {
+	    board = moveUser(board, 'X');
+	    draw(board);
+	    stage = tictactoe.findStage(board);
+	    if(stage.equals("X wins") || stage.equals("Draw"))
+		break;
+	    board = moveUser(board, 'O');
+	    draw(board);
+	    stage = tictactoe.findStage(board);
+	    if(stage.equals("O wins") || stage.equals("Draw"))
+		break;
+	}
+	
+	// Ends the game when someone wins or when there is a draw
+	System.out.println(stage);
+      
     }
     
 
@@ -22,7 +41,7 @@ public class App {
      * Jugadas del user y verifica que si la casilla esta permitida.
      * @return board - Devuelve un nuevo table con la jugada del usuario.
      */
-    public static char[][] moveUser(char[][] board) {
+    public static char[][] moveUser(char[][] board, char symbol) {
 	int x = -1, y = -1; 
 	boolean flag = true;
 	// Jugada del usuario
@@ -34,7 +53,7 @@ public class App {
 	    // Tranform coordinate and modicar board by every movement.
 	    int newx = 3 - y, newy= x - 1;
 	    if (board[newx][newy] == ' ') {
-		board[newx][newy] = 'X';
+		board[newx][newy] = symbol;
 		flag = false;
 	    }else
 		System.out.println("This cell is occupied! Choose another one!");
